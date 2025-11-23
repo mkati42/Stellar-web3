@@ -19,8 +19,31 @@ export default function TokenCheckPage() {
   const handleCheck = async () => {
     setLoading(true);
     setResult(null);
-    // Kullanıcıdan gelen stringi ayır (ör: USDC:G...ISSUER...)
-    const [assetCode, issuer] = input.split(":");
+    // XLM için sadece assetCode ile, diğerleri için eski kontrol
+    const trimmed = input.trim();
+    if (trimmed.toUpperCase() === "XLM") {
+      try {
+        const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/api/token-info", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ assetCode: "XLM" })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setResult(data.error || "Bilinmeyen bir hata oluştu.");
+        } else {
+          setResult(
+            `Asset: ${data.asset_code}\nAmount: ${data.amount}`
+          );
+        }
+      } catch (err) {
+        setResult("API bağlantı hatası: " + (err as any).message);
+      }
+      setLoading(false);
+      return;
+    }
+    // Diğer varlıklar için eski kontrol
+    const [assetCode, issuer] = trimmed.split(":");
     if (!assetCode || !issuer) {
       setResult("Lütfen 'ASSETCODE:ISSUER' formatında girin.");
       setLoading(false);
@@ -37,7 +60,7 @@ export default function TokenCheckPage() {
         setResult(data.error || "Bilinmeyen bir hata oluştu.");
       } else {
         setResult(
-          `Asset: ${data.asset_code}\nIssuer: ${data.asset_issuer}\nAmount: ${data.amount}\nNum Accounts: ${data.num_accounts}`
+          `Asset: ${data.asset_code}\nIssuer: ${data.asset_issuer}\nAmount: ${data.amount}`
         );
       }
     } catch (err) {
@@ -47,16 +70,16 @@ export default function TokenCheckPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-slate-200 p-4">
+    <main className="min-h-screen flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="w-full max-w-xl"
+        className="w-full max-w-3xl"
       >
-        <Card className="shadow-xl">
+        <Card className="shadow-2xl bg-gradient-to-br from-[#0a1833] via-[#232b36] to-[#181a1f] border border-gray-800 p-2 md:p-8">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-center">Stellar Token Authenticity Checker</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-gray-300 to-gray-600">Choken Token Checker</CardTitle>
           </CardHeader>
           <CardContent>
             <form
@@ -67,29 +90,26 @@ export default function TokenCheckPage() {
               className="space-y-4"
             >
               <div className="space-y-2">
-                <Label htmlFor="tokenInput">Asset Code & Issuer</Label>
+                <Label htmlFor="tokenInput" className="text-gray-200">Asset Code & Issuer</Label>
                 <Textarea
                   id="tokenInput"
                   placeholder="Örnek: USDC:G...ISSUER..."
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   rows={3}
-                  className="resize-none"
+                  className="resize-none bg-gray-900 text-gray-100 border-gray-700 placeholder:text-gray-500"
                   required
                 />
               </div>
-              <Button type="submit" disabled={loading} className="w-full">
+              <Button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-blue-900 via-gray-800 to-black text-white border-none shadow hover:from-blue-800 hover:to-gray-900">
                 {loading ? "Kontrol Ediliyor..." : "Token Kontrol Et"}
               </Button>
             </form>
             {result && (
-              <div className="mt-6 p-4 rounded bg-slate-50 border text-sm text-gray-700">
+              <div className="mt-6 p-4 rounded bg-gray-900 border border-gray-700 text-sm text-gray-200">
                 {result}
               </div>
             )}
-            <Button onClick={() => router.push('/profile')} className="mt-6 w-full" variant="outline">
-              Profil Sayfasına Git
-            </Button>
           </CardContent>
         </Card>
       </motion.div>
