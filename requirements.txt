@@ -1,0 +1,6 @@
+# Python dependencies (backend)
+flask
+stellar-sdk
+python-dotenv
+
+# Add other backend dependencies here
