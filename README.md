@@ -1,73 +1,86 @@
 # Stellar Web3 Token Checker
 
-Bu proje, Stellar ağı üzerinde token güvenliği kontrolü ve cüzdan bağlantısı (Freighter) sağlayan modern bir Web3 uygulamasıdır. Hem frontend (Next.js/React) hem backend (Express.js/Python) bileşenleri içerir ve Docker ile kolayca ayağa kaldırılabilir.
+This project is a modern Web3 application that provides token security checks and wallet connection (Freighter) on the Stellar network. It includes both frontend (Next.js/React) and backend (Express.js/Python) components, and can be easily deployed using Docker.
 
-## Kurulum
+## Installation
 
-### Gereksinimler
-- Node.js (v18+ önerilir)
-- npm veya yarn
-- Python 3.x
-- pip
-- make
-- Docker (opsiyonel, prod ortamı için)
+### Requirements
 
-### Adımlar
+* Node.js (v18+ recommended)
+* npm or yarn
+* Python 3.x
+* pip
+* make
+* Docker (optional, for production environments)
 
-1. **Depoyu klonlayın:**
+### Steps
+
+1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/kullanici/stellar-web3.git
    cd stellar-web3
    ```
 
-2. **Ortam değişkenlerini ayarlayın:**
-   - Kök dizinde `.env.example` dosyasını `.env` olarak kopyalayın:
+2. **Set up environment variables:**
+
+   * Copy `.env.example` to `.env` in the root directory:
+
      ```bash
      cp .env.example .env
      ```
-   - `.env` dosyasındaki `WALLET_PUBLIC_KEY` ve `ISSUER_PUBLIC_KEY` değerlerini doldurun.
+   * Fill in the `WALLET_PUBLIC_KEY` and `ISSUER_PUBLIC_KEY` values in the `.env` file.
 
-3. **Tüm bağımlılıkları yükleyin:**
+3. **Install all dependencies:**
+
    ```bash
    make setup
    ```
-   Bu komut hem backend (Python), hem frontend (Node.js) bağımlılıklarını yükler ve .env dosyasını hazırlar.
 
-4. **Geliştirme ortamını başlatın:**
-   - Frontend için:
+   This command installs both backend (Python) and frontend (Node.js) dependencies and prepares the `.env` file.
+
+4. **Start the development environment:**
+
+   * For the frontend:
+
      ```bash
      cd frontend
      npm run dev
      ```
-   - Backend için:
+   * For the backend:
+
      ```bash
      cd backend
      python3 index.js
      ```
 
-5. **Docker ile başlatmak için:**
+5. **To run with Docker:**
+
    ```bash
    sudo docker compose up -d --build
    ```
 
-## Ortam Değişkenleri (.env)
+## Environment Variables (.env)
 
-`.env` dosyası kök dizinde bulunmalı ve aşağıdaki değişkenleri içermelidir:
+The `.env` file should be located in the root directory and contain the following variables:
 
 ```
-WALLET_PUBLIC_KEY=G... (kendi public key'iniz)
+WALLET_PUBLIC_KEY=G... (your own public key)
 ISSUER_PUBLIC_KEY=GATBZYJ63AEGHFBWXULQNQUF766PV4NJBKKLURZ2KC2KPTCCC5N5AV4Y
 ```
 
-## Komutlar
-- `make setup` : Tüm bağımlılıkları yükler ve .env dosyasını hazırlar.
-- `make up` : Docker ile tüm servisi başlatır.
-- `make frontend-up` / `make backend-up` : Sadece ilgili servisi başlatır.
-- `make down` : Docker servislerini durdurur.
+## Commands
 
-## Notlar
-- Freighter cüzdanı için [https://www.freighter.app/](https://www.freighter.app/) uzantısını kurmalısınız.
-- Geliştirme sırasında .env dosyanızı kimseyle paylaşmayın.
+* `make setup` : Installs all dependencies and prepares the .env file
+* `make up` : Starts all services with Docker
+* `make frontend-up` / `make backend-up` : Starts only the related service
+* `make down` : Stops Docker services
+
+## Notes
+
+* You must install the Freighter wallet extension from [https://www.freighter.app/](https://www.freighter.app/).
+* Do not share your `.env` file during development.
+
 
 ---
 
